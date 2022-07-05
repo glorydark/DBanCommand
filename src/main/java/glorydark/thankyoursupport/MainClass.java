@@ -32,8 +32,9 @@ public class MainClass extends PluginBase implements Listener {
     public void CommandProcess(PlayerCommandPreprocessEvent event){
         Player player = event.getPlayer();
         if(player == null){return;}
-        if(player.isOp()){ return; }
+        //if(player.isOp()){ return; }
         String command = event.getMessage().toLowerCase();
+        player.sendMessage(command);
         if(isWorldBannedCommand(player, command)){
             event.setCancelled(true);
         }
@@ -59,29 +60,9 @@ public class MainClass extends PluginBase implements Listener {
         if(object != null) {
             List<String> strings = (List<String>) object;
             if(strings.size() < 1){return false;}
-            String[] commandSplits = command.split(" ");
             for(String verifyString: strings){
-                verifyString = "/"+verifyString;
-                String[] verifyStrings = verifyString.split(" ");
-                if(verifyStrings.length > 0){
-                    if(verifyStrings.length > commandSplits.length){ continue; }
-                    boolean state = true;
-                    for(int i=0; i<verifyStrings.length; i++){
-                        if (!verifyStrings[i].equals(commandSplits[i])) {
-                            state = false;
-                            break;
-                        }
-                    }
-                    if(state){
-                        player.sendMessage(TextFormat.RED+ "[DBanCommands] 该指令被禁用");
-                        return true;
-                    }
-                }else{
-                    if(command.equals(verifyString)){
-                        player.sendMessage(TextFormat.RED+ "[DBanCommands] 该指令被禁用");
-                        return true;
-                    }
-                }
+                verifyString = ("/"+verifyString).toLowerCase();
+                if(command.startsWith(verifyString)){player.sendMessage(TextFormat.RED+ "[DBanCommands] 该指令被禁用"); return false; }
             }
         }
         return false;
@@ -89,28 +70,11 @@ public class MainClass extends PluginBase implements Listener {
 
     public Boolean isGlobalBannedCommand(Player player, String command){
         if(bancommands.size()<1){return false;}
-        String[] commandSplits = command.split(" ");
         for(String verifyString: bancommands){
-            verifyString = "/"+verifyString;
-            String[] verifyStrings = verifyString.split(" ");
-            if(verifyStrings.length > 0){
-                if(verifyStrings.length > commandSplits.length){ continue; }
-                boolean state = true;
-                for(int i=0; i<verifyStrings.length; i++){
-                    if (!verifyStrings[i].equals(commandSplits[i])) {
-                        state = false;
-                        break;
-                    }
-                }
-                if(state){
-                    player.sendMessage(TextFormat.RED+ "[DBanCommands] 该指令被禁用");
-                    return true;
-                }
-            }else{
-                if(command.equals(verifyString)){
-                    player.sendMessage(TextFormat.RED+ "[DBanCommands] 该指令被禁用");
-                    return true;
-                }
+            verifyString = ("/"+verifyString).toLowerCase();
+            if(command.startsWith(verifyString)){
+                player.sendMessage(TextFormat.RED+ "[DBanCommands] 该指令被禁用");
+                return true;
             }
         }
         return false;
