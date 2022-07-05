@@ -32,9 +32,8 @@ public class MainClass extends PluginBase implements Listener {
     public void CommandProcess(PlayerCommandPreprocessEvent event){
         Player player = event.getPlayer();
         if(player == null){return;}
-        //if(player.isOp()){ return; }
+        if(player.isOp()){ return; }
         String command = event.getMessage().toLowerCase();
-        player.sendMessage(command);
         if(isWorldBannedCommand(player, command)){
             event.setCancelled(true);
         }
